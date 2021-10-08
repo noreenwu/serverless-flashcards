@@ -1,0 +1,56 @@
+service:
+  name: serverless-flashcards
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+functions:
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
+  GetFlashcards:
+    handler: src/lambda/http/getFlashcards.handler
+    events:
+      - http:
+          method: get
+          path: flashcards
+
+  CreateFlashcard:
+    handler: src/lambda/http/createFlashcard.handler
+    events:
+      - http:
+          method: post
+          path: flashcards
+
+  UpdateFlashcard:
+    handler: src/lambda/http/updateFlashcard.handler
+    events:
+      - http:
+          method: patch
+          path: flashcards/{flashcardId}
+
+  DeleteFlashcard:
+    handler: src/lambda/http/deleteFlashcard.handler
+    events:
+      - http:
+          method: delete
+          path: flashcards/{flashcardId}
+
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: flashcards/{flashcardId}/attachment
+
+resources:
+  Resources:
+  
