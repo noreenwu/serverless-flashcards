@@ -10,11 +10,11 @@ export class FlashcardAccess {
 
     constructor(
         private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
-        private readonly flashcardsTable = process.env.TODOS_TABLE) {
+        private readonly flashcardsTable = process.env.FLASHCARDS_TABLE) {
         }
 
         async getAllFlashcards(userId: string): Promise<FlashcardItem[]> {
-            logger.info('getting all Todos for user', {
+            logger.info('getting all Flashcards for user', {
                 userId
             }); 
             const result = await this.docClient
