@@ -12,6 +12,15 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
+  tracing:
+    lambda: true
+    apiGateway: true
+    
+environment:
+  FLASHCARDS_TABLE: Flashcards-${self:provider.stage}
+  # IMAGES_S3_BUCKET: wun1-serverless-flashcards-images-${self:provider.stage}
+  # SIGNED_URL_EXPIRATION: 300
+
 functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
@@ -23,34 +32,48 @@ functions:
           method: get
           path: flashcards
 
-  CreateFlashcard:
-    handler: src/lambda/http/createFlashcard.handler
-    events:
-      - http:
-          method: post
-          path: flashcards
+  # CreateFlashcard:
+  #   handler: src/lambda/http/createFlashcard.handler
+  #   events:
+  #     - http:
+  #         method: post
+  #         path: flashcards
 
-  UpdateFlashcard:
-    handler: src/lambda/http/updateFlashcard.handler
-    events:
-      - http:
-          method: patch
-          path: flashcards/{flashcardId}
+  # UpdateFlashcard:
+  #   handler: src/lambda/http/updateFlashcard.handler
+  #   events:
+  #     - http:
+  #         method: patch
+  #         path: flashcards/{flashcardId}
 
-  DeleteFlashcard:
-    handler: src/lambda/http/deleteFlashcard.handler
-    events:
-      - http:
-          method: delete
-          path: flashcards/{flashcardId}
+  # DeleteFlashcard:
+  #   handler: src/lambda/http/deleteFlashcard.handler
+  #   events:
+  #     - http:
+  #         method: delete
+  #         path: flashcards/{flashcardId}
 
-  GenerateUploadUrl:
-    handler: src/lambda/http/generateUploadUrl.handler
-    events:
-      - http:
-          method: post
-          path: flashcards/{flashcardId}/attachment
+  # GenerateUploadUrl:
+  #   handler: src/lambda/http/generateUploadUrl.handler
+  #   events:
+  #     - http:
+  #         method: post
+  #         path: flashcards/{flashcardId}/attachment
 
 resources:
   Resources:
-  
+    TodosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S         
+          - AttributeName: todoId
+            AttributeType: S            
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: todoId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.FLASHCARDS_TABLE}
