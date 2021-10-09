@@ -2,21 +2,21 @@
 
 import { FlashcardItem } from '../models/FlashcardItem'
 import { FlashcardAccess } from '../dataLayer/flashcardsAccess'
-import { CreateFlashcardRequest } from '../requests/CreateFlashcardRequest'
-import { UpdateFlashcardRequest } from '../requests/UpdateFlashcardRequest'
+// import { CreateFlashcardRequest } from '../requests/CreateFlashcardRequest'
+// import { UpdateFlashcardRequest } from '../requests/UpdateFlashcardRequest'
 import { parseUserId } from '../auth/utils'
 // import { createLogger } from '../utils/logger'
 
-const logger = createLogger('businesslogic')
+// const logger = createLogger('businesslogic')
 const flashcardAccess = new FlashcardAccess();
 
 // get all Flashcards for logged in user
 export async function getAllFlashcards(jwtToken: string): Promise<FlashcardItem[]> {
-    logger.info('getting all Todos for user', {
-        jwtToken
-    });     
+    // logger.info('getting all Todos for user', {
+    //     jwtToken
+    // });     
     const userId = parseUserId(jwtToken)
-    return flaschardAccess.getAllFlashcards(userId)
+    return flashcardAccess.getAllFlashcards(userId)
 }
 
 // // create a Flashcard for logged in user
