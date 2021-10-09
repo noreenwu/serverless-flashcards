@@ -1,5 +1,5 @@
 service:
-  name: serverless-flashcards
+  name: serverless-flashcards-app
 
 plugins:
   - serverless-webpack
@@ -9,19 +9,15 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v1'}
+  stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
-  tracing:
-    lambda: true
-    apiGateway: true
-    
-environment:
-  FLASHCARDS_TABLE: Flashcards-${self:provider.stage}
-  # IMAGES_S3_BUCKET: wun1-serverless-flashcards-images-${self:provider.stage}
-  # SIGNED_URL_EXPIRATION: 300
+  environment:
+    FLASHCARDS_TABLE: Flashcards-${self:provider.stage}
+
 
 functions:
+
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
@@ -32,40 +28,46 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}    
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/Flashcards}    
     events:
       - http:
           method: get
           path: flashcards
           cors: true
 
-  # CreateFlashcard:
-  #   handler: src/lambda/http/createFlashcard.handler
+  # # TODO: Configure this function
+  # GetTodos:
+  # CreateTodo:
+  #   handler: src/lambda/http/createTodo.handler
   #   events:
   #     - http:
   #         method: post
-  #         path: flashcards
+  #         path: todos
 
-  # UpdateFlashcard:
-  #   handler: src/lambda/http/updateFlashcard.handler
+  # # TODO: Configure this function
+  # UpdateTodo:
+  #   handler: src/lambda/http/updateTodo.handler
   #   events:
   #     - http:
   #         method: patch
-  #         path: flashcards/{flashcardId}
+  #         path: todos/{todoId}
 
-  # DeleteFlashcard:
-  #   handler: src/lambda/http/deleteFlashcard.handler
+  # # TODO: Configure this function
+  # DeleteTodo:
+  #   handler: src/lambda/http/deleteTodo.handler
   #   events:
   #     - http:
   #         method: delete
-  #         path: flashcards/{flashcardId}
+  #         path: todos/{todoId}
 
+  # # TODO: Configure this function
   # GenerateUploadUrl:
   #   handler: src/lambda/http/generateUploadUrl.handler
   #   events:
   #     - http:
   #         method: post
-  #         path: flashcards/{flashcardId}/attachment
+  #         path: todos/{todoId}/attachment
+
 
 resources:
   Resources:
