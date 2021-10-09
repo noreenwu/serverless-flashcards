@@ -30,6 +30,7 @@
     "@types/http-errors": "^1.8.1",
     "aws-xray-sdk": "^3.3.3",
     "axios": "^0.22.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
   }
 }
