@@ -8,8 +8,7 @@
       "minLength": 1
     },
     "answer": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     }
   },
   "required": [

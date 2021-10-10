@@ -50,10 +50,11 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
     this.props.history.push(`/todos/${todoId}/edit`)
   }
 
-  onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onFlashcardCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       const dueDate = this.calculateDueDate()
       console.log("token is ", this.props.auth.getIdToken())
+      console.log("this new question is ", this.state.newFlashcardQuestion)
       const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
         question: this.state.newFlashcardQuestion,
         answer: ""
@@ -71,7 +72,7 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
         console.log("Eval Error")
       }
       else {
-        console.log('Todo creation failed')
+        console.log('Flashcard creation failed')
       }
     }
   }
@@ -139,7 +140,7 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
               labelPosition: 'left',
               icon: 'add',
               content: 'Add flashcard',
-              onClick: this.onTodoCreate
+              onClick: this.onFlashcardCreate
             }}
             fluid
             actionPosition="left"
