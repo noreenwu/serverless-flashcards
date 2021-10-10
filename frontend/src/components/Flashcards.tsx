@@ -1,6 +1,5 @@
-import dateFormat from 'dateformat'
 import { History } from 'history'
-import update from 'immutability-helper'
+// import update from 'immutability-helper'
 import * as React from 'react'
 import {
   Button,
@@ -20,7 +19,7 @@ import { getFlashcards, createFlashcard, deleteFlashcard } from '../api/flashcar
 import Auth from '../auth/Auth'
 import { Flashcard } from '../types/Flashcard'
 
-interface TodosProps {
+interface FlashcardProps {
   auth: Auth
   history: History
 }
@@ -37,7 +36,7 @@ const getRandomInt = (max: number) => {
 }
 
 
-export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState> {
+export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsState> {
   state: FlashcardsState = {
     flashcards: [],
     newFlashcardQuestion: '',
@@ -45,8 +44,9 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
     loadingFlashcards: true
   }
 
-  handleQuestionChange = (value: string) => {
-    this.setState({ newFlashcardQuestion: value })
+  handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    this.setState({ newFlashcardQuestion: event.target.value })
   }
 
   handleAnswerChange = (value: string) => {
@@ -58,7 +58,8 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
   }
 
   // onFlashcardCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
-  onFlashcardCreate = async () => {
+  onFlashcardCreate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     try {
       console.log("token is ", this.props.auth.getIdToken())
       console.log("this new question is ", this.state.newFlashcardQuestion)
@@ -69,9 +70,9 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
 
       this.setState({        
         flashcards: [...this.state.flashcards, newFlashcard],
-        newFlashcardQuestion: ' '
+        newFlashcardQuestion: '',
+        newFlashcardAnswer: ''
       })
-      this.handleQuestionChange("")
     } catch (e) {
       if (e instanceof TypeError) {
         console.log("Type error")
@@ -141,9 +142,9 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
 
   renderCreateTodoInput() {
     return (
-      <Form onSubmit={this.onFlashcardCreate}>
-        <Form.Input label="Enter question" onChange={(event) => this.handleQuestionChange(event.target.value)}/>
-        <Form.Input label="Enter answer" onChange={(event) => this.handleAnswerChange(event.target.value)}/>
+      <Form onSubmit={(event) => this.onFlashcardCreate(event)}>
+        <Form.Input label="Enter question" value={this.state.newFlashcardQuestion} onChange={(event) => this.handleQuestionChange(event)}/>
+        <Form.Input label="Enter answer" value={this.state.newFlashcardAnswer} onChange={(event) => this.handleAnswerChange(event.target.value)}/>
         <Button type='submit'>Submit</Button>
       </Form>
       // <Grid.Row columns="equal">
@@ -239,12 +240,5 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
         })}
       </Grid>
     )
-  }
-
-  calculateDueDate(): string {
-    const date = new Date()
-    date.setDate(date.getDate() + 7)
-
-    return dateFormat(date, 'yyyy-mm-dd') as string
   }
 }
