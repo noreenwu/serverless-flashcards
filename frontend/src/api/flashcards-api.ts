@@ -1,10 +1,10 @@
 import { apiEndpoint } from '../config'
-import { Todo } from '../types/Todo';
+import { Flashcard } from '../types/Flashcard';
 import { CreateTodoRequest } from '../types/CreateTodoRequest';
 import Axios from 'axios'
 import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
 
-export async function getFlashcards(idToken: string): Promise<Todo[]> {
+export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
   console.log('Fetching flashcards')
 
   const response = await Axios.get(`${apiEndpoint}/flashcards`, {
@@ -17,10 +17,10 @@ export async function getFlashcards(idToken: string): Promise<Todo[]> {
   return response.data.items
 }
 
-export async function createTodo(
+export async function createFlashcard(
   idToken: string,
   newTodo: CreateTodoRequest
-): Promise<Todo> {
+): Promise<Flashcard> {
   console.log("async function createTodo about to POST newTodo", newTodo)
   const response = await Axios.post(`${apiEndpoint}/todos`,  JSON.stringify(newTodo), {
     headers: {

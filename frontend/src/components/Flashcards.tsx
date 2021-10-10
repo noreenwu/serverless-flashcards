@@ -14,20 +14,20 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import { getFlashcards } from '../api/flashcards-api'
-import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+// import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { getFlashcards, createFlashcard } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
-import { Todo } from '../types/Todo'
+import { Flashcard } from '../types/Flashcard'
 
 interface TodosProps {
   auth: Auth
   history: History
 }
 
-interface TodosState {
-  todos: Todo[]
-  newTodoName: string
-  loadingTodos: boolean
+interface FlashcardsState {
+  flashcards: Flashcard[]
+  newFlashcardQuestion: string
+  loadingFlashcards: boolean
 }
 
 const getRandomInt = (max: number) => {
@@ -35,15 +35,15 @@ const getRandomInt = (max: number) => {
 }
 
 
-export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
-  state: TodosState = {
-    todos: [],
-    newTodoName: '',
-    loadingTodos: true
+export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState> {
+  state: FlashcardsState = {
+    flashcards: [],
+    newFlashcardQuestion: '',
+    loadingFlashcards: true
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newTodoName: event.target.value })
+    this.setState({ newFlashcardQuestion: event.target.value })
   }
 
   onEditButtonClick = (todoId: string) => {
@@ -54,14 +54,14 @@ export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
     try {
       const dueDate = this.calculateDueDate()
       console.log("token is ", this.props.auth.getIdToken())
-      const newTodo = await createTodo(this.props.auth.getIdToken(), {
-        name: this.state.newTodoName,
+      const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
+        name: this.state.newFlashcardQuestion,
         dueDate
       }) 
 
       this.setState({
-        todos: [...this.state.todos, newTodo],
-        newTodoName: ''
+        flashcards: [...this.state.flashcards, newFlashcard],
+        newFlashcardQuestion: ''
       })
     } catch (e) {
       if (e instanceof TypeError) {
@@ -76,41 +76,41 @@ export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
     }
   }
 
-  onTodoDelete = async (todoId: string) => {
-    try {
-      await deleteTodo(this.props.auth.getIdToken(), todoId)
-      this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId != todoId)
-      })
-    } catch {
-      alert('Todo deletion failed')
-    }
-  }
+  // onTodoDelete = async (flashcardId: string) => {
+  //   try {
+  //     await deleteTodo(this.props.auth.getIdToken(), flashcardId)
+  //     this.setState({
+  //       flashcards: this.state.flashcards.filter(flashcard => flashcard.flashcardId != flashcardId)
+  //     })
+  //   } catch {
+  //     alert('Todo deletion failed')
+  //   }
+  // }
 
-  onTodoCheck = async (pos: number) => {
-    try {
-      const todo = this.state.todos[pos]
-      await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
-        name: todo.name,
-        dueDate: todo.dueDate,
-        done: !todo.done
-      })
-      this.setState({
-        todos: update(this.state.todos, {
-          [pos]: { done: { $set: !todo.done } }
-        })
-      })
-    } catch {
-      alert('Todo check failed')
-    }
-  }
+  // onTodoCheck = async (pos: number) => {
+  //   try {
+  //     const todo = this.state.todos[pos]
+  //     await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
+  //       name: todo.name,
+  //       dueDate: todo.dueDate,
+  //       done: !todo.done
+  //     })
+  //     this.setState({
+  //       todos: update(this.state.todos, {
+  //         [pos]: { done: { $set: !todo.done } }
+  //       })
+  //     })
+  //   } catch {
+  //     alert('Todo check failed')
+  //   }
+  // }
 
   async componentDidMount() {
     try {
-      const todos = await getFlashcards(this.props.auth.getIdToken())
+      const flashcards = await getFlashcards(this.props.auth.getIdToken())
       this.setState({
-        todos,
-        loadingTodos: false
+        flashcards,
+        loadingFlashcards: false
       })
     } catch (e) {
       console.log('Failed to fetch todos: ', e)
@@ -155,7 +155,7 @@ export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
   }
 
   renderFlashcards() {
-    if (this.state.loadingTodos) {
+    if (this.state.loadingFlashcards) {
       return this.renderLoading()
     }
 
@@ -175,26 +175,26 @@ export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
   renderFlashcardsList() {
     return (
       <Grid padded>
-        {this.state.todos.map((todo, pos) => {
+        {this.state.flashcards.map((flashcard, pos) => {
           return (
-            <Grid.Row key={todo.todoId}>
+            <Grid.Row key={flashcard.flashcardId}>
               <Grid.Column width={1} verticalAlign="middle">
                 <Checkbox
-                  onChange={() => this.onTodoCheck(pos)}
-                  checked={todo.done}
+                  // onChange={() => this.onTodoCheck(pos)}
+                  checked={flashcard.mastery}
                 />
               </Grid.Column>
               <Grid.Column width={10} verticalAlign="middle">
-                {todo.name}
+                {flashcard.question}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {todo.dueDate}
+                {flashcard.answer}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(todo.todoId)}
+                  onClick={() => this.onEditButtonClick(flashcard.flashcardId)}
                 >
                   <Icon name="pencil" />
                 </Button>
@@ -203,13 +203,13 @@ export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
                 <Button
                   icon
                   color="red"
-                  onClick={() => this.onTodoDelete(todo.todoId)}
+                  // onClick={() => this.onTodoDelete(flashcard.flashcardId)}
                 >
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {todo.attachmentUrl && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
+              {flashcard.attachmentUrl && (
+                <Image src={flashcard.attachmentUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />
