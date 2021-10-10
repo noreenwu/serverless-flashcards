@@ -6,12 +6,13 @@ import {
   Button,
   Checkbox,
   Divider,
+  Form,
   Grid,
   Header,
   Icon,
   Input,
   Image,
-  Loader
+  Loader,
 } from 'semantic-ui-react'
 
 // import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
@@ -27,6 +28,7 @@ interface TodosProps {
 interface FlashcardsState {
   flashcards: Flashcard[]
   newFlashcardQuestion: string
+  newFlashcardAnswer: string
   loadingFlashcards: boolean
 }
 
@@ -39,31 +41,37 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
   state: FlashcardsState = {
     flashcards: [],
     newFlashcardQuestion: '',
+    newFlashcardAnswer: '',
     loadingFlashcards: true
   }
 
-  handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newFlashcardQuestion: event.target.value })
+  handleQuestionChange = (value: string) => {
+    this.setState({ newFlashcardQuestion: value })
+  }
+
+  handleAnswerChange = (value: string) => {
+    this.setState({ newFlashcardAnswer: value })
   }
 
   onEditButtonClick = (todoId: string) => {
     this.props.history.push(`/todos/${todoId}/edit`)
   }
 
-  onFlashcardCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  // onFlashcardCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onFlashcardCreate = async () => {
     try {
-      const dueDate = this.calculateDueDate()
       console.log("token is ", this.props.auth.getIdToken())
       console.log("this new question is ", this.state.newFlashcardQuestion)
       const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
         question: this.state.newFlashcardQuestion,
-        answer: ""
+        answer: this.state.newFlashcardAnswer
       }) 
 
-      this.setState({
+      this.setState({        
         flashcards: [...this.state.flashcards, newFlashcard],
-        newFlashcardQuestion: ''
+        newFlashcardQuestion: ' '
       })
+      this.handleQuestionChange("")
     } catch (e) {
       if (e instanceof TypeError) {
         console.log("Type error")
@@ -106,6 +114,7 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
   //   }
   // }
 
+
   async componentDidMount() {
     try {
       const flashcards = await getFlashcards(this.props.auth.getIdToken())
@@ -132,26 +141,36 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
 
   renderCreateTodoInput() {
     return (
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Input
-            action={{
-              color: 'teal',
-              labelPosition: 'left',
-              icon: 'add',
-              content: 'Add flashcard',
-              onClick: this.onFlashcardCreate
-            }}
-            fluid
-            actionPosition="left"
-            placeholder="School in Spanish?"
-            onChange={this.handleNameChange}
-          />
-        </Grid.Column>
-        <Grid.Column width={16}>
-          <Divider />
-        </Grid.Column>
-      </Grid.Row>
+      <Form onSubmit={this.onFlashcardCreate}>
+        <Form.Input label="Enter question" onChange={(event) => this.handleQuestionChange(event.target.value)}/>
+        <Form.Input label="Enter answer" onChange={(event) => this.handleAnswerChange(event.target.value)}/>
+        <Button type='submit'>Submit</Button>
+      </Form>
+      // <Grid.Row columns="equal">
+      //   <Grid.Column>
+      //     <Input
+      //       action={{
+      //         color: 'teal',
+      //         labelPosition: 'left',
+      //         icon: 'add',
+      //         content: 'Add flashcard',
+      //         onClick: this.onFlashcardCreate
+      //       }}
+      //       fluid
+      //       // actionPosition="left"
+      //       placeholder="School in Spanish?"
+      //       onChange={(event) => this.handleQuestionChange(event.target.value)}
+      //     />
+      //   </Grid.Column>
+
+      //   <Grid.Column>
+      //     <Input fluid placeholder="answer"/>
+      //   </Grid.Column>
+
+      //   <Grid.Column>
+      //     <Divider />
+      //   </Grid.Column>
+      // </Grid.Row>
     )
   }
 
