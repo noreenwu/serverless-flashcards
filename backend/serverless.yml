@@ -69,13 +69,23 @@ functions:
   #         method: patch
   #         path: todos/{todoId}
 
-  # # TODO: Configure this function
-  # DeleteTodo:
-  #   handler: src/lambda/http/deleteTodo.handler
-  #   events:
-  #     - http:
-  #         method: delete
-  #         path: todos/{todoId}
+  DeleteFlashcard:
+    handler: src/lambda/http/deleteFlashcard.handler
+    iamRoleStatementsName: deleteFlashcard-role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}    
+    events:
+      - http:
+          method: delete
+          path: flashcards/{flashcardId}
+          cors: true
+          request:
+            parameters:
+              paths:
+                flashcardId: true          
 
   # # TODO: Configure this function
   # GenerateUploadUrl:

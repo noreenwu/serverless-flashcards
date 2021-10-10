@@ -44,19 +44,19 @@ export class FlashcardAccess {
               return newFlashcard;
         }
 
-        // async deleteTodo(userId: string, todoId: string): Promise<string> {
-        //     logger.info('deleting specified Flashcard', {
-        //         userId,
-        //         todoId
-        //     });             
-        //     await this.docClient.delete({
-        //         TableName: this.flashcardsTable,
-        //         Key: { userId, todoId }
-        //     })
-        //     .promise();
+        async deleteFlashcard(userId: string, flashcardId: string): Promise<string> {
+            logger.info('deleting specified Flashcard', {
+                userId,
+                flashcardId
+            });             
+            await this.docClient.delete({
+                TableName: this.flashcardsTable,
+                Key: { userId, flashcardId }
+            })
+            .promise();
 
-        //     return  todoId;
-        // }
+            return  flashcardId;
+        }
 
         // async updateTodo(userId: string, todoId: string, todo: UpdateFlashcardRequest): Promise<any> {
         //     logger.info('updating specified Flashcard with new values', {

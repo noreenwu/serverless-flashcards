@@ -18,7 +18,7 @@ export async function getAllFlashcards(jwtToken: string): Promise<FlashcardItem[
     return flashcardAccess.getAllFlashcards(userId)
 }
 
-// // create a Flashcard for logged in user
+// create a Flashcard for logged in user
 export async function createFlashcard(newFlashcard: CreateFlashcardRequest, jwtToken: string): Promise<FlashcardItem> {    
     const flashcardId = uuid.v4()
     const userId = parseUserId(jwtToken)
@@ -38,17 +38,17 @@ export async function createFlashcard(newFlashcard: CreateFlashcardRequest, jwtT
     })
 }
 
-// // delete specified Todo for logged in user
-// export async function deleteTodo(todoId: string, jwtToken: string): Promise<string> {
-//     const userId = parseUserId(jwtToken)
-//     logger.info('deleteTodo', {
-//         userId,
-//         todoId
-//     });
+// delete specified Flashcard for logged in user
+export async function deleteFlashcard(flashcardId: string, jwtToken: string): Promise<string> {
+    const userId = parseUserId(jwtToken)
+    logger.info('deleteFlashcard', {
+        userId,
+        flashcardId
+    });
 
-//     return todoAccess.deleteTodo(userId, todoId)
+    return flashcardAccess.deleteFlashcard(userId, flashcardId)
 
-// }
+}
 
 // // update specified Todo for logged in user
 // export async function updateTodo(todoId: string, revisedTodo: UpdateTodoRequest, jwtToken: string): Promise<TodoItem> {
