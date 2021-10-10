@@ -15,7 +15,7 @@ import {
 } from 'semantic-ui-react'
 
 // import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
-import { getFlashcards, createFlashcard } from '../api/flashcards-api'
+import { getFlashcards, createFlashcard, deleteFlashcard } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
 import { Flashcard } from '../types/Flashcard'
 
@@ -55,8 +55,8 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
       const dueDate = this.calculateDueDate()
       console.log("token is ", this.props.auth.getIdToken())
       const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
-        name: this.state.newFlashcardQuestion,
-        dueDate
+        question: this.state.newFlashcardQuestion,
+        answer: ""
       }) 
 
       this.setState({
@@ -76,16 +76,16 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
     }
   }
 
-  // onTodoDelete = async (flashcardId: string) => {
-  //   try {
-  //     await deleteTodo(this.props.auth.getIdToken(), flashcardId)
-  //     this.setState({
-  //       flashcards: this.state.flashcards.filter(flashcard => flashcard.flashcardId != flashcardId)
-  //     })
-  //   } catch {
-  //     alert('Todo deletion failed')
-  //   }
-  // }
+  onFlashcardDelete = async (flashcardId: string) => {
+    try {
+      await deleteFlashcard(this.props.auth.getIdToken(), flashcardId)
+      this.setState({
+        flashcards: this.state.flashcards.filter(flashcard => flashcard.flashcardId != flashcardId)
+      })
+    } catch {
+      alert('Flashcard deletion failed')
+    }
+  }
 
   // onTodoCheck = async (pos: number) => {
   //   try {
@@ -203,7 +203,7 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
                 <Button
                   icon
                   color="red"
-                  // onClick={() => this.onTodoDelete(flashcard.flashcardId)}
+                  onClick={() => this.onFlashcardDelete(flashcard.flashcardId)}
                 >
                   <Icon name="delete" />
                 </Button>

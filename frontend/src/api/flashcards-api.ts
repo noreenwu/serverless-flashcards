@@ -1,6 +1,6 @@
 import { apiEndpoint } from '../config'
 import { Flashcard } from '../types/Flashcard';
-import { CreateTodoRequest } from '../types/CreateTodoRequest';
+import { CreateFlashcardRequest } from '../types/CreateFlashcardRequest';
 import Axios from 'axios'
 import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
 
@@ -19,10 +19,10 @@ export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
 
 export async function createFlashcard(
   idToken: string,
-  newTodo: CreateTodoRequest
+  newFlashcard: CreateFlashcardRequest
 ): Promise<Flashcard> {
-  console.log("async function createTodo about to POST newTodo", newTodo)
-  const response = await Axios.post(`${apiEndpoint}/todos`,  JSON.stringify(newTodo), {
+  console.log("async function createFlashcard about to POST newFlashcard", newFlashcard)
+  const response = await Axios.post(`${apiEndpoint}/flashcards`,  JSON.stringify(newFlashcard), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -45,11 +45,11 @@ export async function patchTodo(
   })
 }
 
-export async function deleteTodo(
+export async function deleteFlashcard(
   idToken: string,
-  todoId: string
+  flashcardId: string
 ): Promise<void> {
-  await Axios.delete(`${apiEndpoint}/todos/${todoId}`, {
+  await Axios.delete(`${apiEndpoint}/flashcards/${flashcardId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
