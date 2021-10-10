@@ -216,7 +216,7 @@ export class Flashcards extends React.PureComponent<TodosProps, FlashcardsState>
                   color="blue"
                   onClick={() => this.onEditButtonClick(flashcard.flashcardId)}
                 >
-                  <Icon name="pencil" />
+                  <Icon name="file image outline" />
                 </Button>
               </Grid.Column>
               <Grid.Column width={1} floated="right">
