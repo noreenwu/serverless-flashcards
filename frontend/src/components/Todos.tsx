@@ -15,6 +15,7 @@ import {
 } from 'semantic-ui-react'
 
 import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { getFlashcards } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
 
@@ -106,7 +107,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   async componentDidMount() {
     try {
-      const todos = await getTodos(this.props.auth.getIdToken())
+      const todos = await getFlashcards(this.props.auth.getIdToken())
       this.setState({
         todos,
         loadingTodos: false
@@ -123,7 +124,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
         {this.renderCreateTodoInput()}
 
-        {this.renderTodos()}
+        {this.renderFlashcards()}
       </div>
     )
   }
@@ -153,26 +154,25 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     )
   }
 
-  renderTodos() {
+  renderFlashcards() {
     if (this.state.loadingTodos) {
       return this.renderLoading()
     }
 
-    return this.renderTodosList()
-    // return this.renderFlashcardsList()
+    return this.renderFlashcardsList()
   }
 
   renderLoading() {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          Loading TODOs
+          Loading Flashcards
         </Loader>
       </Grid.Row>
     )
   }
 
-  renderTodosList() {
+  renderFlashcardsList() {
     return (
       <Grid padded>
         {this.state.todos.map((todo, pos) => {
