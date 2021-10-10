@@ -9,18 +9,26 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'dev-v1'}
   region: ${opt:region, 'us-east-1'}
+
+  tracing:
+    lambda: true
+    apiGateway: true
 
   environment:
     FLASHCARDS_TABLE: Flashcards-${self:provider.stage}
 
+custom:
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Flashcards API
+        description: Serverless backend for Flashcards
+
 
 functions:
-
-  Auth:
-    handler: src/lambda/auth/auth0Authorizer.handler
-
   GetFlashcards:
     handler: src/lambda/http/getFlashcards.handler
     iamRoleStatementsName: getFlashcards-role
@@ -28,12 +36,27 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/Flashcards}    
+        # Resource: arn:aws:dynamodb:${self:provider.region}:*:table/Flashcards}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}
+
     events:
       - http:
           method: get
           path: flashcards
           cors: true
+  # GetFlashcards:
+  #   handler: src/lambda/http/getFlashcards.handler
+  #   iamRoleStatementsName: getFlashcards-role
+  #   iamRoleStatements:
+  #     - Effect: Allow
+  #       Action:
+  #         - dynamodb:Query
+  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}
+  #   events:
+  #     - http:
+  #         method: get
+  #         path: flashcards
+  #         cors: true        
 
   # # TODO: Configure this function
   # GetTodos:
