@@ -14,8 +14,8 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
 import { getFlashcards } from '../api/flashcards-api'
+import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
 
@@ -35,7 +35,7 @@ const getRandomInt = (max: number) => {
 }
 
 
-export class Todos extends React.PureComponent<TodosProps, TodosState> {
+export class Flashcards extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
@@ -120,7 +120,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   render() {
     return (
       <div>
-        <Header as="h1">FLASHCARDS!</Header>
+        <Header as="h1">Flashcards!</Header>
 
         {this.renderCreateTodoInput()}
 
@@ -138,12 +138,12 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
               color: 'teal',
               labelPosition: 'left',
               icon: 'add',
-              content: 'New task',
+              content: 'Add flashcard',
               onClick: this.onTodoCreate
             }}
             fluid
             actionPosition="left"
-            placeholder="To change the world..."
+            placeholder="School in Spanish?"
             onChange={this.handleNameChange}
           />
         </Grid.Column>
