@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "flashcard",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string"
+    },
+    "mastery": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "question",
+    "answer"
+  ],
+  "additionalProperties": false
+}

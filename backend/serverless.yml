@@ -43,30 +43,24 @@ functions:
       - http:
           method: get
           path: flashcards
+          cors: true       
+
+  CreateFlashcard:
+    handler: src/lambda/http/createFlashcard.handler
+    iamRoleStatementsName: createFlashcard-role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}
+    events:
+      - http:
+          method: post
+          path: flashcards
           cors: true
-  # GetFlashcards:
-  #   handler: src/lambda/http/getFlashcards.handler
-  #   iamRoleStatementsName: getFlashcards-role
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - dynamodb:Query
-  #       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}
-  #   events:
-  #     - http:
-  #         method: get
-  #         path: flashcards
-  #         cors: true        
-
-  # # TODO: Configure this function
-  # GetTodos:
-  # CreateTodo:
-  #   handler: src/lambda/http/createTodo.handler
-  #   events:
-  #     - http:
-  #         method: post
-  #         path: todos
-
+          request:
+            schema:
+              application/json: ${file(reqmodels/create-flashcard-request.json)}
   # # TODO: Configure this function
   # UpdateTodo:
   #   handler: src/lambda/http/updateTodo.handler

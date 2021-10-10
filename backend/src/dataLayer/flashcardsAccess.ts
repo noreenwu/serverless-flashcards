@@ -32,17 +32,17 @@ export class FlashcardAccess {
             return items as FlashcardItem[]
         }
 
-        // async createTodo(newTodo: FlashcardItem): Promise<FlashcardItem> {
-        //     logger.info('creating a new Flashcard', {
-        //         newTodo
-        //     });              
-        //     await this.docClient.put({
-        //         TableName: this.flashcardsTable,
-        //         Item: newTodo
-        //       }).promise();
+        async createFlashcard(newFlashcard: FlashcardItem): Promise<FlashcardItem> {
+            logger.info('creating a new Flashcard', {
+                newFlashcard
+            });              
+            await this.docClient.put({
+                TableName: this.flashcardsTable,
+                Item: newFlashcard
+              }).promise();
                             
-        //       return newTodo;
-        // }
+              return newFlashcard;
+        }
 
         // async deleteTodo(userId: string, todoId: string): Promise<string> {
         //     logger.info('deleting specified Flashcard', {
