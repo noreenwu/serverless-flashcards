@@ -84,44 +84,44 @@ export class FlashcardAccess {
         //     return retTodo
         // }
 
-        // async getUploadUrl(todoId: string): Promise<string> {
-        //     const bucketName = process.env.IMAGES_S3_BUCKET
-        //     const urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION)
+        async getUploadUrl(flashcardId: string): Promise<string> {
+            const bucketName = process.env.IMAGES_S3_BUCKET
+            const urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION)
 
-        //     logger.info('Generating an uploadURL', {
-        //         todoId
-        //     });
+            logger.info('Generating an uploadURL', {
+                flashcardId
+            });
 
-        //     const s3 = new AWS.S3({
-        //         signatureVersion: 'v4'
-        //     })
+            const s3 = new AWS.S3({
+                signatureVersion: 'v4'
+            })
 
-        //     return s3.getSignedUrl('putObject', {
-        //         Bucket: bucketName,
-        //         Key: todoId,
-        //         Expires: urlExpiration
-        //     })
-        //  }
+            return s3.getSignedUrl('putObject', {
+                Bucket: bucketName,
+                Key: flashcardId,
+                Expires: urlExpiration
+            })
+         }
 
-        //  async updateTodoUploadUrl(userId: string, todoId: string, url: string): Promise<any> {
-        //     logger.info('Saving uploadURL to FlashcardsTable specified item', {
-        //         userId,
-        //         todoId,
-        //         url
-        //     });             
-        //     const updated = await this.docClient.update({
-        //         TableName: this.flashcardsTable,
-        //         Key: { userId, todoId },
-        //         UpdateExpression: "set attachmentUrl=:URL",
-        //         ExpressionAttributeValues: {
-        //         ":URL": url.split("?")[0]
-        //         },
-        //         ReturnValues: "UPDATED_NEW"
-        //     })
-        //     .promise();
+         async updateFlashcardUploadUrl(userId: string, flashcardId: string, url: string): Promise<any> {
+            logger.info('Saving uploadURL to FlashcardsTable specified item', {
+                userId,
+                flashcardId,
+                url
+            });             
+            const updated = await this.docClient.update({
+                TableName: this.flashcardsTable,
+                Key: { userId, flashcardId },
+                UpdateExpression: "set attachmentUrl=:URL",
+                ExpressionAttributeValues: {
+                ":URL": url.split("?")[0]
+                },
+                ReturnValues: "UPDATED_NEW"
+            })
+            .promise();
 
-        //     return updated
-        // } 
+            return updated
+        } 
 }
 
 

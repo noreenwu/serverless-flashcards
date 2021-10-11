@@ -53,8 +53,8 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     this.setState({ newFlashcardAnswer: value })
   }
 
-  onEditButtonClick = (todoId: string) => {
-    this.props.history.push(`/todos/${todoId}/edit`)
+  onAddImageClick = (flashcardId: string) => {
+    this.props.history.push(`/flashcards/${flashcardId}/add`)
   }
 
   // onFlashcardCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
@@ -215,7 +215,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(flashcard.flashcardId)}
+                  onClick={() => this.onAddImageClick(flashcard.flashcardId)}
                 >
                   <Icon name="file image outline" />
                 </Button>

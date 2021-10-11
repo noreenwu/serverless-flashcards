@@ -63,21 +63,21 @@ export async function deleteFlashcard(flashcardId: string, jwtToken: string): Pr
 //     return todoAccess.updateTodo(userId, todoId, revisedTodo)
 // }
 
-// // get upload Url
-// export async function getUploadUrl(todoId: string): Promise<string> {
-//     logger.info('getUploadUrl', {
-//         todoId
-//     });    
-//     return await todoAccess.getUploadUrl(todoId)
-// }
+// get upload Url
+export async function getUploadUrl(flashcardId: string): Promise<string> {
+    logger.info('getUploadUrl', {
+        flashcardId
+    });    
+    return await flashcardAccess.getUploadUrl(flashcardId)
+}
 
-// // save the S3 url in the Todo item
-// export async function saveUploadUrl(todoId: string, jwtToken: string, url: string): Promise<string> {
-//     const userId = parseUserId(jwtToken)
-//     logger.info('saveUploadUrl', {
-//         todoId,
-//         jwtToken,
-//         url
-//     });
-//     return await todoAccess.updateTodoUploadUrl(userId, todoId, url)
-// }
+// save the S3 url in the Flashcard item
+export async function saveUploadUrl(flashcardId: string, jwtToken: string, url: string): Promise<string> {
+    const userId = parseUserId(jwtToken)
+    logger.info('saveUploadUrl', {
+        flashcardId,
+        jwtToken,
+        url
+    });
+    return await flashcardAccess.updateFlashcardUploadUrl(userId, flashcardId, url)
+}
