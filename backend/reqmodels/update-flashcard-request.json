@@ -19,8 +19,7 @@
     }
   },
   "required": [
-    "question",
-    "answer"
+    "mastery"
   ],
   "additionalProperties": false
 }

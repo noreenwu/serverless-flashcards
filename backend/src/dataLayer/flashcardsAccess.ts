@@ -2,7 +2,7 @@
 const AWS = require('aws-sdk')
 import { FlashcardItem } from '../models/FlashcardItem'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-// import { UpdateFlashcardRequest } from '../requests/UpdateFlashcardRequest'
+import { UpdateFlashcardRequest } from '../requests/UpdateFlashcardRequest'
 import { createLogger } from '../utils/logger'
 const logger = createLogger('datalayer')
 
@@ -58,31 +58,31 @@ export class FlashcardAccess {
             return  flashcardId;
         }
 
-        // async updateTodo(userId: string, todoId: string, todo: UpdateFlashcardRequest): Promise<any> {
-        //     logger.info('updating specified Flashcard with new values', {
-        //         userId,
-        //         todoId,
-        //         todo
-        //     });            
-        //     const updatedTodo = await this.docClient.update({
-        //         TableName: this.flashcardsTable,
-        //         Key: { userId, todoId },
-        //         ExpressionAttributeNames: {
-        //           '#todo_name': 'name',
-        //         },
-        //         ExpressionAttributeValues: {
-        //           ':name': todo.name,
-        //           ':dueDate': todo.dueDate,
-        //           ':done': todo.done,
-        //         },
-        //         UpdateExpression: 'SET #todo_name = :name, dueDate = :dueDate, done = :done',
-        //         ReturnValues: 'ALL_NEW',
-        //     })
-        //     .promise();
+        async updateFlashcard(userId: string, flashcardId: string, flashcard: UpdateFlashcardRequest): Promise<any> {
+            logger.info('updating specified Flashcard with new values', {
+                userId,
+                flashcardId,
+                flashcard
+            });            
+            const updatedFlashcard = await this.docClient.update({
+                TableName: this.flashcardsTable,
+                Key: { userId, flashcardId },
+                ExpressionAttributeNames: {
+                  '#flashcard_question': 'question',
+                },
+                ExpressionAttributeValues: {
+                  ':question': flashcard.question,
+                  ':answer': flashcard.answer,
+                  ':mastery': flashcard.mastery,
+                },
+                UpdateExpression: 'SET #flashcard_question = :question, answer = :answer, mastery = :mastery',
+                ReturnValues: 'ALL_NEW',
+            })
+            .promise();
             
-        //     const retTodo = { ...updatedTodo.Attributes }
-        //     return retTodo
-        // }
+            const retFlashcard = { ...updatedFlashcard.Attributes }
+            return retFlashcard
+        }
 
         async getUploadUrl(flashcardId: string): Promise<string> {
             const bucketName = process.env.IMAGES_S3_BUCKET

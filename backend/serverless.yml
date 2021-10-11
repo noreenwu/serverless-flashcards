@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v1'}
+  stage: ${opt:stage, 'dev-v2'}
   region: ${opt:region, 'us-east-1'}
 
   tracing:
@@ -67,13 +67,26 @@ functions:
           request:
             schema:
               application/json: ${file(reqmodels/create-flashcard-request.json)}
-  # # TODO: Configure this function
-  # UpdateTodo:
-  #   handler: src/lambda/http/updateTodo.handler
-  #   events:
-  #     - http:
-  #         method: patch
-  #         path: todos/{todoId}
+
+  UpdateFlashcard:
+    handler: src/lambda/http/updateFlashcard.handler
+    iamRoleStatementsName: updateFlashcard-role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}    
+    events:
+      - http:
+          method: patch
+          path: flashcards/{flashcardId}
+          cors: true
+          request:
+            parameters:
+              paths:
+                flashcardId: true
+            schema:
+              application/json: ${file(reqmodels/update-flashcard-request.json)}
 
   DeleteFlashcard:
     handler: src/lambda/http/deleteFlashcard.handler

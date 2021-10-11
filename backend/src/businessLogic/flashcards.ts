@@ -2,7 +2,7 @@ import * as uuid from 'uuid'
 import { FlashcardItem } from '../models/FlashcardItem'
 import { FlashcardAccess } from '../dataLayer/flashcardsAccess'
 import { CreateFlashcardRequest } from '../requests/CreateFlashcardRequest'
-// import { UpdateFlashcardRequest } from '../requests/UpdateFlashcardRequest'
+import { UpdateFlashcardRequest } from '../requests/UpdateFlashcardRequest'
 import { parseUserId } from '../auth/utils'
 import { createLogger } from '../utils/logger'
 
@@ -50,18 +50,18 @@ export async function deleteFlashcard(flashcardId: string, jwtToken: string): Pr
 
 }
 
-// // update specified Todo for logged in user
-// export async function updateTodo(todoId: string, revisedTodo: UpdateTodoRequest, jwtToken: string): Promise<TodoItem> {
+// update specified Flashcard for logged in user
+export async function updateFlashcard(flashcardId: string, revisedTodo: UpdateFlashcardRequest, jwtToken: string): Promise<FlashcardItem> {
 
-//     const userId = parseUserId(jwtToken)
-//     logger.info('updateTodo', {
-//         userId,
-//         todoId,
-//         revisedTodo
-//     });
+    const userId = parseUserId(jwtToken)
+    logger.info('updateFlashcard', {
+        userId,
+        flashcardId,
+        revisedTodo
+    });
 
-//     return todoAccess.updateTodo(userId, todoId, revisedTodo)
-// }
+    return flashcardAccess.updateFlashcard(userId, flashcardId, revisedTodo)
+}
 
 // get upload Url
 export async function getUploadUrl(flashcardId: string): Promise<string> {
