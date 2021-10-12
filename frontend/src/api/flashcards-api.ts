@@ -2,7 +2,7 @@ import { apiEndpoint } from '../config'
 import { Flashcard } from '../types/Flashcard';
 import { CreateFlashcardRequest } from '../types/CreateFlashcardRequest';
 import Axios from 'axios'
-import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
+import { UpdateFlashcardRequest } from '../types/UpdateFlashcardRequest';
 
 export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
   console.log('Fetching flashcards')
@@ -32,12 +32,12 @@ export async function createFlashcard(
   return response.data.newItem
 }
 
-export async function patchTodo(
+export async function patchFlashcard(
   idToken: string,
-  todoId: string,
-  updatedTodo: UpdateTodoRequest
+  flashcardId: string,
+  updatedFlashcard: UpdateFlashcardRequest
 ): Promise<void> {
-  await Axios.patch(`${apiEndpoint}/todos/${todoId}`, JSON.stringify(updatedTodo), {
+  await Axios.patch(`${apiEndpoint}/flashcards/${flashcardId}`, JSON.stringify(updatedFlashcard), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`

@@ -1,5 +1,5 @@
 import { History } from 'history'
-// import update from 'immutability-helper'
+import update from 'immutability-helper'
 import * as React from 'react'
 import {
   Button,
@@ -15,7 +15,7 @@ import {
 } from 'semantic-ui-react'
 
 // import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
-import { getFlashcards, createFlashcard, deleteFlashcard } from '../api/flashcards-api'
+import { getFlashcards, createFlashcard, deleteFlashcard, patchFlashcard } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
 import { Flashcard } from '../types/Flashcard'
 
@@ -97,23 +97,23 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     }
   }
 
-  // onTodoCheck = async (pos: number) => {
-  //   try {
-  //     const todo = this.state.todos[pos]
-  //     await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
-  //       name: todo.name,
-  //       dueDate: todo.dueDate,
-  //       done: !todo.done
-  //     })
-  //     this.setState({
-  //       todos: update(this.state.todos, {
-  //         [pos]: { done: { $set: !todo.done } }
-  //       })
-  //     })
-  //   } catch {
-  //     alert('Todo check failed')
-  //   }
-  // }
+  onFlashcardCheck = async (pos: number) => {
+    try {
+      const flashcard = this.state.flashcards[pos]
+      await patchFlashcard(this.props.auth.getIdToken(), flashcard.flashcardId, {
+        question: flashcard.question,
+        answer: flashcard.answer,
+        mastery: !flashcard.mastery
+      })
+      this.setState({
+        flashcards: update(this.state.flashcards, {
+          [pos]: { mastery: { $set: !flashcard.mastery } }
+        })
+      })
+    } catch {
+      alert('Flashcard check failed')
+    }
+  }
 
 
   async componentDidMount() {
@@ -201,7 +201,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
             <Grid.Row key={flashcard.flashcardId}>
               <Grid.Column width={1} verticalAlign="middle">
                 <Checkbox
-                  // onChange={() => this.onTodoCheck(pos)}
+                  onChange={() => this.onFlashcardCheck(pos)}
                   checked={flashcard.mastery}
                 />
               </Grid.Column>
