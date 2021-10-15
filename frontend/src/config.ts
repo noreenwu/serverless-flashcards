@@ -1,8 +1,8 @@
 // The apiId here identifies the API in AWS APIGateway that is being called.
 // The apiEndpoint is the API's baseUrl.
 // const apiId = '40g2xhokvj'
-const apiId = 'czo47lto89'   // flashcards
-export const apiEndpoint = `https://${apiId}.execute-api.us-east-1.amazonaws.com/dev-v2`
+const apiId = 'wsgdkzxs5g'   // flashcards
+export const apiEndpoint = `https://${apiId}.execute-api.us-east-1.amazonaws.com/dev-v4`
 
 export const authConfig = {
   domain: 'wudev.auth0.com',                             // Auth0 domain

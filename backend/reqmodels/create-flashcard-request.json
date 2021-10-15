@@ -9,6 +9,9 @@
     },
     "answer": {
       "type": "string"
+    },
+    "category": {
+      "type": "string"
     }
   },
   "required": [

@@ -28,6 +28,7 @@ interface FlashcardsState {
   flashcards: Flashcard[]
   newFlashcardQuestion: string
   newFlashcardAnswer: string
+  newCategory: string
   loadingFlashcards: boolean
 }
 
@@ -41,6 +42,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     flashcards: [],
     newFlashcardQuestion: '',
     newFlashcardAnswer: '',
+    newCategory: 'None',
     loadingFlashcards: true
   }
 
@@ -65,13 +67,15 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
       console.log("this new question is ", this.state.newFlashcardQuestion)
       const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
         question: this.state.newFlashcardQuestion,
-        answer: this.state.newFlashcardAnswer
+        answer: this.state.newFlashcardAnswer,
+        category: this.state.newCategory
       }) 
 
       this.setState({        
         flashcards: [...this.state.flashcards, newFlashcard],
         newFlashcardQuestion: '',
-        newFlashcardAnswer: ''
+        newFlashcardAnswer: '',
+        newCategory: ''
       })
     } catch (e) {
       if (e instanceof TypeError) {

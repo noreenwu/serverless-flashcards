@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v2'}
+  stage: ${opt:stage, 'dev-v4'}
   region: ${opt:region, 'us-east-1'}
 
   tracing:
@@ -18,6 +18,7 @@ provider:
 
   environment:
     FLASHCARDS_TABLE: Flashcards-${self:provider.stage}
+    CATEGORY_INDEX: Flashcards-Category-Index-${self:provider.stage}
     IMAGES_S3_BUCKET: wun1-serverless-flashcards-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
@@ -135,7 +136,9 @@ resources:
       Properties:
         AttributeDefinitions:
           - AttributeName: userId
-            AttributeType: S         
+            AttributeType: S 
+          - AttributeName: category
+            AttributeType: S 
           - AttributeName: flashcardId
             AttributeType: S            
         KeySchema:
@@ -145,6 +148,15 @@ resources:
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.FLASHCARDS_TABLE}
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.CATEGORY_INDEX}
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+              - AttributeName: flashcardId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL        
 
     AttachmentsBucket:
       Type: AWS::S3::Bucket
