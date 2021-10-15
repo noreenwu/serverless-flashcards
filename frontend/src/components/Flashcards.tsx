@@ -55,6 +55,10 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     this.setState({ newFlashcardAnswer: value })
   }
 
+  handleCategoryInputChange = (value: string) => {
+    this.setState({ newCategory: value })
+  }
+
   onAddImageClick = (flashcardId: string) => {
     this.props.history.push(`/flashcards/${flashcardId}/add`)
   }
@@ -149,6 +153,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
       <Form onSubmit={(event) => this.onFlashcardCreate(event)}>
         <Form.Input label="Enter question" value={this.state.newFlashcardQuestion} onChange={(event) => this.handleQuestionChange(event)}/>
         <Form.Input label="Enter answer" value={this.state.newFlashcardAnswer} onChange={(event) => this.handleAnswerChange(event.target.value)}/>
+        <Form.Input label="Category" value={this.state.newCategory} onChange={(event) => this.handleCategoryInputChange(event.target.value)}/>
         <Button type='submit'>Submit</Button>
       </Form>
       // <Grid.Row columns="equal">
@@ -200,6 +205,12 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
   renderFlashcardsList() {
     return (
       <Grid padded>
+        <Grid.Row style={{fontWeight:"bold"}}>
+          <Grid.Column width={1}></Grid.Column>
+          <Grid.Column width={7}>Question</Grid.Column>
+          <Grid.Column width={3}>Answer</Grid.Column>
+          <Grid.Column width={3}>Category</Grid.Column>
+        </Grid.Row>
         {this.state.flashcards.map((flashcard, pos) => {
           return (
             <Grid.Row key={flashcard.flashcardId}>
@@ -209,11 +220,14 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
                   checked={flashcard.mastery}
                 />
               </Grid.Column>
-              <Grid.Column width={10} verticalAlign="middle">
+              <Grid.Column width={7} verticalAlign="middle">
                 {flashcard.question}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
                 {flashcard.answer}
+              </Grid.Column>
+              <Grid.Column width={3} floated="right">
+                {flashcard.category}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
