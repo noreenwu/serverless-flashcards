@@ -75,7 +75,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
         flashcards: [...this.state.flashcards, newFlashcard],
         newFlashcardQuestion: '',
         newFlashcardAnswer: '',
-        newCategory: ''
+        newCategory: 'None'
       })
     } catch (e) {
       if (e instanceof TypeError) {
