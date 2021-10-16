@@ -70,7 +70,6 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     this.props.history.push(`/flashcards/${flashcardId}/add`)
   }
 
-  // onFlashcardCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
   onFlashcardCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
@@ -104,6 +103,12 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
   onFlashcardGetByCategory = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     console.log("onFlashcardGetByCategory submit")
+
+    if (this.state.filterByCategory === "") {
+      this.getAllFlashcards()
+      return
+    }
+
     try {
       const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), this.state.filterByCategory)
       this.setState({
@@ -144,8 +149,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     }
   }
 
-
-  async componentDidMount() {
+  getAllFlashcards = async () => {
     try {
       const flashcards = await getFlashcards(this.props.auth.getIdToken())
       this.setState({
@@ -155,6 +159,10 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     } catch (e) {
       console.log('Failed to fetch flashcards on page load: ', e)
     }
+  }
+
+  async componentDidMount() {
+    this.getAllFlashcards()
   }
 
   render() {
@@ -183,7 +191,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
         </Grid.Column>
         <Grid.Column verticalAlign='middle'>
           <Form onSubmit={(event) => this.onFlashcardGetByCategory(event)}>
-          <Form.Input label="Filter by:" placeholder="Spanish" value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
+          <Form.Input label="Filter by:" placeholder="Choose category..." value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
           <Button content="View" primary type='submit'/>
           </Form>
         </Grid.Column>
@@ -191,31 +199,6 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
       <Divider vertical>Or</Divider>
 
       </Segment>
-      // <Grid.Row columns="equal">
-      //   <Grid.Column>
-      //     <Input
-      //       action={{
-      //         color: 'teal',
-      //         labelPosition: 'left',
-      //         icon: 'add',
-      //         content: 'Add flashcard',
-      //         onClick: this.onFlashcardCreate
-      //       }}
-      //       fluid
-      //       // actionPosition="left"
-      //       placeholder="School in Spanish?"
-      //       onChange={(event) => this.handleQuestionChange(event.target.value)}
-      //     />
-      //   </Grid.Column>
-
-      //   <Grid.Column>
-      //     <Input fluid placeholder="answer"/>
-      //   </Grid.Column>
-
-      //   <Grid.Column>
-      //     <Divider />
-      //   </Grid.Column>
-      // </Grid.Row>
     )
   }
 
