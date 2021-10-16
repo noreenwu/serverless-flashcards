@@ -29,7 +29,8 @@ interface FlashcardsState {
   flashcards: Flashcard[]
   newFlashcardQuestion: string
   newFlashcardAnswer: string
-  newCategory: string
+  newCategory: string,
+  filterByCategory: string,
   loadingFlashcards: boolean
 }
 
@@ -44,6 +45,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     newFlashcardQuestion: '',
     newFlashcardAnswer: '',
     newCategory: 'None',
+    filterByCategory: '',
     loadingFlashcards: true
   }
 
@@ -60,6 +62,10 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     this.setState({ newCategory: value })
   }
 
+  handleFilterByCatChange = (value: string) => {
+    this.setState({ filterByCategory: value})
+  }
+
   onAddImageClick = (flashcardId: string) => {
     this.props.history.push(`/flashcards/${flashcardId}/add`)
   }
@@ -73,7 +79,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
       const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
         question: this.state.newFlashcardQuestion,
         answer: this.state.newFlashcardAnswer,
-        category: this.state.newCategory
+        category: this.state.newCategory,
       }) 
 
       this.setState({        
@@ -93,6 +99,15 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
         console.log('Flashcard creation failed')
       }
     }
+  }
+
+  onFlashcardGetByCategory = async(event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log("onFlashcardGetByCategory submit")
+    // try {
+    //   const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), ) {
+
+    // }
   }
 
   onFlashcardDelete = async (flashcardId: string) => {
@@ -162,8 +177,8 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
           </Form>
         </Grid.Column>
         <Grid.Column verticalAlign='middle'>
-          <Form>
-          <Form.Input label="Filter by:" placeholder="Spanish"/>
+          <Form onSubmit={(event) => this.onFlashcardGetByCategory(event)}>
+          <Form.Input label="Filter by:" placeholder="Spanish" value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
           <Button content="View" primary type='submit'/>
           </Form>
         </Grid.Column>
