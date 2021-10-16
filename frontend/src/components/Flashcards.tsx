@@ -12,6 +12,7 @@ import {
   Input,
   Image,
   Loader,
+  Segment
 } from 'semantic-ui-react'
 
 // import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
@@ -150,12 +151,26 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
 
   renderCreateTodoInput() {
     return (
-      <Form onSubmit={(event) => this.onFlashcardCreate(event)}>
-        <Form.Input label="Enter question" value={this.state.newFlashcardQuestion} onChange={(event) => this.handleQuestionChange(event)}/>
-        <Form.Input label="Enter answer" value={this.state.newFlashcardAnswer} onChange={(event) => this.handleAnswerChange(event.target.value)}/>
-        <Form.Input label="Category" value={this.state.newCategory} onChange={(event) => this.handleCategoryInputChange(event.target.value)}/>
-        <Button type='submit'>Submit</Button>
-      </Form>
+      <Segment>
+      <Grid columns={2} relaxed='very' stackable>
+        <Grid.Column>
+          <Form onSubmit={(event) => this.onFlashcardCreate(event)}>
+            <Form.Input label="Enter question" value={this.state.newFlashcardQuestion} onChange={(event) => this.handleQuestionChange(event)}/>
+            <Form.Input label="Enter answer" value={this.state.newFlashcardAnswer} onChange={(event) => this.handleAnswerChange(event.target.value)}/>
+            <Form.Input label="Category" value={this.state.newCategory} onChange={(event) => this.handleCategoryInputChange(event.target.value)}/>
+            <Button content="Add Flashcard" primary type='submit'/>
+          </Form>
+        </Grid.Column>
+        <Grid.Column verticalAlign='middle'>
+          <Form>
+          <Form.Input label="Filter by:" placeholder="Spanish"/>
+          <Button content="View" primary type='submit'/>
+          </Form>
+        </Grid.Column>
+      </Grid>
+      <Divider vertical>Or</Divider>
+
+      </Segment>
       // <Grid.Row columns="equal">
       //   <Grid.Column>
       //     <Input

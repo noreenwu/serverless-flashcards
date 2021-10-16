@@ -98,7 +98,6 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          // path="/todos/:todoId/edit"
           path="/flashcards/:flashcardId/add"
           exact
           render={props => {
