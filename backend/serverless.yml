@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
-  stage: ${opt:stage, 'dev-v4'}
+  stage: ${opt:stage, 'dev-v6'}
   region: ${opt:region, 'us-east-1'}
 
   tracing:
@@ -51,6 +51,29 @@ functions:
           method: get
           path: flashcards
           cors: true       
+
+  GetFlashcardsByCategory:
+    handler: src/lambda/http/getFlashcardsByCategory.handler
+    iamRoleStatementsName: getFlashcardsByCategory-role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}/index/${self:provider.environment.CATEGORY_INDEX}
+        # Bucket is actually public
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+        Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
+    events:
+      - http:
+          method: get
+          path: flashcardsbycat/{category}
+          cors: true
 
   CreateFlashcard:
     handler: src/lambda/http/createFlashcard.handler

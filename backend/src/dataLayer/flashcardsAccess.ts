@@ -10,7 +10,8 @@ export class FlashcardAccess {
 
     constructor(
         private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
-        private readonly flashcardsTable = process.env.FLASHCARDS_TABLE) {
+        private readonly flashcardsTable = process.env.FLASHCARDS_TABLE,
+        private readonly categoryIndex = process.env.CATEGORY_INDEX) {
         }
 
         async getAllFlashcards(userId: string): Promise<FlashcardItem[]> {
@@ -23,6 +24,29 @@ export class FlashcardAccess {
                     KeyConditionExpression: 'userId = :userId',
                     ExpressionAttributeValues: {
                         ':userId': userId
+                },
+                ScanIndexForward: false
+            }).promise()
+
+            const items = result.Items
+
+            return items as FlashcardItem[]
+        }
+
+        // By Category
+        async getAllFlashcardsByCategory(userId: string, category: string): Promise<FlashcardItem[]> {
+            console.log("datalayer category is ", category)
+            logger.info('getting all Flashcards by category for user', {
+                userId,
+                category
+            }); 
+            const result = await this.docClient
+                .query({
+                    TableName: this.flashcardsTable,
+                    IndexName: this.categoryIndex,
+                    KeyConditionExpression: 'category = :category',
+                    ExpressionAttributeValues: {
+                        ':category': category
                 },
                 ScanIndexForward: false
             }).promise()
