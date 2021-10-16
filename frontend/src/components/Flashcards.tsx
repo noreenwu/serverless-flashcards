@@ -205,7 +205,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
   renderFlashcardsList() {
     return (
       <Grid padded>
-        <Grid.Row style={{fontWeight:"bold"}}>
+        <Grid.Row style={{fontWeight:"bold", fontSize:"larger"}}>
           <Grid.Column width={1}></Grid.Column>
           <Grid.Column width={7}>Question</Grid.Column>
           <Grid.Column width={3}>Answer</Grid.Column>

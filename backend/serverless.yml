@@ -176,7 +176,7 @@ resources:
             KeySchema:
               - AttributeName: category
                 KeyType: HASH
-              - AttributeName: flashcardId
+              - AttributeName: userId
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL        

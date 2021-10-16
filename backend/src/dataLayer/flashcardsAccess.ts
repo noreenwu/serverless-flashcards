@@ -44,9 +44,10 @@ export class FlashcardAccess {
                 .query({
                     TableName: this.flashcardsTable,
                     IndexName: this.categoryIndex,
-                    KeyConditionExpression: 'category = :category',
+                    KeyConditionExpression: 'userId = :userId and category = :category',
                     ExpressionAttributeValues: {
-                        ':category': category
+                        ':category': category,
+                        ':userId': userId
                 },
                 ScanIndexForward: false
             }).promise()
