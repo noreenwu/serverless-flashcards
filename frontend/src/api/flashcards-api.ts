@@ -17,6 +17,19 @@ export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
   return response.data.items
 }
 
+export async function getFlashcardsByCategory(idToken: string, category: string): Promise<Flashcard[]> {
+  console.log('Fetching flashcards by category ', category)
+
+  const response = await Axios.get(`${apiEndpoint}/flashcardsbycat/${category}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`
+    },
+  })
+  console.log('Flashcards by cat:', response.data)
+  return response.data.items
+}
+
 export async function createFlashcard(
   idToken: string,
   newFlashcard: CreateFlashcardRequest

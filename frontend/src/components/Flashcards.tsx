@@ -16,7 +16,7 @@ import {
 } from 'semantic-ui-react'
 
 // import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
-import { getFlashcards, createFlashcard, deleteFlashcard, patchFlashcard } from '../api/flashcards-api'
+import { getFlashcards, getFlashcardsByCategory, createFlashcard, deleteFlashcard, patchFlashcard } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
 import { Flashcard } from '../types/Flashcard'
 
@@ -104,10 +104,15 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
   onFlashcardGetByCategory = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     console.log("onFlashcardGetByCategory submit")
-    // try {
-    //   const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), ) {
-
-    // }
+    try {
+      const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), this.state.filterByCategory)
+      this.setState({
+        flashcards,
+        loadingFlashcards: false
+      })
+    } catch (e) {
+      console.log('Failed to fetch flashcards by category')
+    }
   }
 
   onFlashcardDelete = async (flashcardId: string) => {
@@ -148,7 +153,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
         loadingFlashcards: false
       })
     } catch (e) {
-      console.log('Failed to fetch todos: ', e)
+      console.log('Failed to fetch flashcards on page load: ', e)
     }
   }
 
