@@ -6,7 +6,6 @@ import { UpdateFlashcardRequest } from '../types/UpdateFlashcardRequest';
 
 
 export async function getFlashcardsByCategory(idToken: string, category="", mastery=""): Promise<Flashcard[]> {
-  console.log('Fetching flashcards by category ', category)
   let response: any
   if ( (! category) && (! mastery) ) {
       response = await Axios.get(`${apiEndpoint}/flashcards`, {
@@ -28,7 +27,6 @@ export async function getFlashcardsByCategory(idToken: string, category="", mast
         },
       })
   }
-  console.log('Flashcards by cat:', response.data)
   return response.data.items
 }
 
@@ -36,14 +34,12 @@ export async function createFlashcard(
   idToken: string,
   newFlashcard: CreateFlashcardRequest
 ): Promise<Flashcard> {
-  console.log("async function createFlashcard about to POST newFlashcard", newFlashcard)
   const response = await Axios.post(`${apiEndpoint}/flashcards`,  JSON.stringify(newFlashcard), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
     }
   })
-  console.log("and the response from Axios.post was: ", response.data.newItem)
   return response.data.newItem
 }
 

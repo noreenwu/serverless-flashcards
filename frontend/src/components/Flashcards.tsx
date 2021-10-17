@@ -83,7 +83,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     event.preventDefault()
     try {
       console.log("token is ", this.props.auth.getIdToken())
-      console.log("this new question is ", this.state.newFlashcardQuestion)
+
       const newFlashcard = await createFlashcard(this.props.auth.getIdToken(), {
         question: this.state.newFlashcardQuestion,
         answer: this.state.newFlashcardAnswer,
@@ -215,7 +215,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
         </Grid.Column>
         <Grid.Column verticalAlign='middle'>
           <Form onSubmit={(event) => this.onFlashcardGetByCategory(event)}>
-          <Form.Input label="Filter by:" placeholder="Enter a category..." value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
+          <Form.Input label="Filter by:" placeholder="Enter a category - leave blank to retrieve all" value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
           <Dropdown 
             inline 
             fluid 
