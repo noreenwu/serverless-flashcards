@@ -24,15 +24,15 @@ React frontend.
 #### Global Secondary Index
 In order to retrieve flashcards from one specified category, a global
 secondary index was specified, so that retrieval of subsets of flashcards
-by category is efficient. If the user also specifies to see flashcards to be learned
-or flashcards to be studied, the subset of flashcards is then filtered by
-the mastery field.
+by category is efficient. If the user wishes to only see flashcards to be learned
+or flashcards to be studied, the subset of flashcards may be filtered by
+using the mastery dropdown field.
 
 If no category is specified, the same endpoint is used to retrieve data,
 but the global secondary index is not used. The business logic layer
 determines which data layer function to use, based on which combination of
 category and mastery have been specified, and different data layer
-functions were set up to either use the GSI or not.
+functions have been set up to either use the GSI or not.
 
 
 #### Querystring Parameters
