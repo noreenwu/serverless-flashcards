@@ -4,28 +4,42 @@ import { CreateFlashcardRequest } from '../types/CreateFlashcardRequest';
 import Axios from 'axios'
 import { UpdateFlashcardRequest } from '../types/UpdateFlashcardRequest';
 
-export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
-  console.log('Fetching flashcards')
+// export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
+//   console.log('Fetching flashcards')
 
-  const response = await Axios.get(`${apiEndpoint}/flashcards`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
-  })
-  console.log('Flashcards:', response.data)
-  return response.data.items
-}
+//   const response = await Axios.get(`${apiEndpoint}/flashcards`, {
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Authorization': `Bearer ${idToken}`
+//     },
+//   })
+//   console.log('Flashcards:', response.data)
+//   return response.data.items
+// }
 
-export async function getFlashcardsByCategory(idToken: string, category: string, mastery: string): Promise<Flashcard[]> {
+export async function getFlashcardsByCategory(idToken: string, category="", mastery=""): Promise<Flashcard[]> {
   console.log('Fetching flashcards by category ', category)
+  let response: any
+  if ( (! category) && (! mastery) ) {
+      response = await Axios.get(`${apiEndpoint}/flashcardsbycat`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      },
+    })   
+  }
+  else {
+      const categoryParam = category !== "" ? `category=${category}` : ""
+      const masteryParam = mastery !== "" ? `mastery=${mastery}` : ""
+      const paramConnector = (categoryParam && masteryParam) ? "&" : ""
 
-  const response = await Axios.get(`${apiEndpoint}/flashcardsbycat?category=${category}&mastery=${mastery}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
-  })
+      response = await Axios.get(`${apiEndpoint}/flashcardsbycat?${categoryParam}${paramConnector}${masteryParam}`, {  
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+      })
+  }
   console.log('Flashcards by cat:', response.data)
   return response.data.items
 }

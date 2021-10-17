@@ -16,7 +16,7 @@ import {
   Segment
 } from 'semantic-ui-react'
 
-import { getFlashcards, getFlashcardsByCategory, createFlashcard, deleteFlashcard, patchFlashcard } from '../api/flashcards-api'
+import {  getFlashcardsByCategory, createFlashcard, deleteFlashcard, patchFlashcard } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
 import { Flashcard } from '../types/Flashcard'
 
@@ -117,10 +117,10 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     event.preventDefault()
     console.log("onFlashcardGetByCategory submit")
 
-    if (this.state.filterByCategory === "") {
-      this.getAllFlashcards()
-      return
-    }
+    // if (this.state.filterByCategory === "") {
+    //   this.getAllFlashcards()
+    //   return
+    // }
 
     try {
       const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), this.state.filterByCategory, this.state.filterByMastery)
@@ -164,7 +164,8 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
 
   getAllFlashcards = async () => {
     try {
-      const flashcards = await getFlashcards(this.props.auth.getIdToken())
+      // const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken())
+      const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), this.state.filterByCategory, this.state.filterByMastery)
       this.setState({
         flashcards,
         loadingFlashcards: false
