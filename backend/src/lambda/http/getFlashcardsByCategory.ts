@@ -16,8 +16,6 @@ const return400 = (message: string) => {
 }
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    // const category = event.pathParameters.category
-
     if ( event.queryStringParameters == null ) {
       return return400("get flashcards by category: no parameters specified")
     }
@@ -38,7 +36,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
           'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({
-            message: "get flashcards by category",
+            message: `get flashcards by category: ${category}, mastery: ${mastery}`,
             items: flashcards
         })
     }
