@@ -9,31 +9,40 @@ import { createLogger } from '../utils/logger'
 const logger = createLogger('businesslogic')
 const flashcardAccess = new FlashcardAccess();
 
-// get all Flashcards for logged in user
+
+const masteryStringToBool = (mastery: string): boolean => {
+    return (mastery === "true")
+}
+
+// get all Flashcards for logged in user (no category)
 export async function getAllFlashcards(jwtToken: string, mastery="All"): Promise<FlashcardItem[]> {
     logger.info('getting all Flashcards for user', {
         jwtToken,
         mastery
     });
     const userId = parseUserId(jwtToken)
-    let masteryBool: boolean
+    // let masteryBool: boolean
     if (mastery !== "All") {
-        masteryBool = (mastery === "true")    
-        return flashcardAccess.getAllFlashcardsFilterByMastery(userId, masteryBool)
+        // masteryBool = (mastery === "true")    
+        return flashcardAccess.getAllFlashcardsFilterByMastery(userId, masteryStringToBool(mastery))
     }
 
     return flashcardAccess.getAllFlashcards(userId)
 }
 
-// get all Flashcards for logged in user
-export async function getAllFlashcardsByCategory(jwtToken: string, category: string, mastery: string): Promise<FlashcardItem[]> {
+// get all Flashcards for logged in user (by category)
+export async function getAllFlashcardsByCategory(jwtToken: string, category: string, mastery="All"): Promise<FlashcardItem[]> {
     logger.info('getting all Flashcards for user', {
         jwtToken,
         category,
         mastery
     });     
     const userId = parseUserId(jwtToken)
-    return flashcardAccess.getAllFlashcardsByCategory(userId, category, mastery)
+    if (mastery !== "All") {
+        return flashcardAccess.getAllFlashcardsByCategoryMastery(userId, category, masteryStringToBool(mastery))
+    }
+
+    return flashcardAccess.getAllFlashcardsByCategory(userId, category)
 }
 
 // create a Flashcard for logged in user

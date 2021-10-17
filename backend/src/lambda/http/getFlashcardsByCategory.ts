@@ -29,7 +29,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       if (( category == null ) && ( mastery !== null) ) {
         // category not specified, but mastery is specified
         message = `get flashcards: category not specified but mastery specified: ${mastery}`
-        flashcards = await getAllFlashcards(jwtToken)  // add mastery parameter, don't use GSI
+        flashcards = await getAllFlashcards(jwtToken, mastery)  // add mastery parameter, don't use GSI
       }
       else {
         // getFlashcardsByCategory can handle optional no mastery flag specified
