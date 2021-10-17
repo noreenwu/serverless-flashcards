@@ -4,18 +4,6 @@ import { CreateFlashcardRequest } from '../types/CreateFlashcardRequest';
 import Axios from 'axios'
 import { UpdateFlashcardRequest } from '../types/UpdateFlashcardRequest';
 
-// export async function getFlashcards(idToken: string): Promise<Flashcard[]> {
-//   console.log('Fetching flashcards')
-
-//   const response = await Axios.get(`${apiEndpoint}/flashcards`, {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': `Bearer ${idToken}`
-//     },
-//   })
-//   console.log('Flashcards:', response.data)
-//   return response.data.items
-// }
 
 export async function getFlashcardsByCategory(idToken: string, category="", mastery=""): Promise<Flashcard[]> {
   console.log('Fetching flashcards by category ', category)

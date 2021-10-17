@@ -41,10 +41,6 @@ interface DropDownOptions {
   text: string
 
 }
-// const getRandomInt = (max: number) => {
-//   return Math.floor(Math.random() * max);
-// }
-
 
 export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsState> {
   state: FlashcardsState = {
@@ -176,7 +172,16 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
   }
 
   async componentDidMount() {
-    this.getAllFlashcards()
+    try {
+      // const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken())
+      const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken())
+      this.setState({
+        flashcards,
+        loadingFlashcards: false
+      })
+    } catch (e) {
+      console.log('Failed to fetch flashcards on page load: ', e)
+    }
   }
 
   render() {
@@ -184,14 +189,14 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
       <div>
         <Header as="h1">Flashcards!</Header>
 
-        {this.renderCreateTodoInput()}
+        {this.renderCreateFlashcardInput()}
 
         {this.renderFlashcards()}
       </div>
     )
   }
 
-  renderCreateTodoInput() {
+  renderCreateFlashcardInput() {
     const masteryOptions = [
       { key: 'All', value: 'All',  text: "All" },
       { key: 'Learned', value: 'true', text: "Learned" },
