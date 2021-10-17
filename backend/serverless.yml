@@ -32,26 +32,6 @@ custom:
 
 
 functions:
-  GetFlashcards:
-    handler: src/lambda/http/getFlashcards.handler
-    iamRoleStatementsName: getFlashcards-role
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FLASHCARDS_TABLE}
-        # Bucket is actually public
-      - Effect: Allow
-        Action:
-          - s3:GetObject
-        Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*        
-
-    events:
-      - http:
-          method: get
-          path: flashcards
-          cors: true       
-
   GetFlashcardsByCategory:
     handler: src/lambda/http/getFlashcardsByCategory.handler
     iamRoleStatementsName: getFlashcardsByCategory-role
@@ -72,7 +52,7 @@ functions:
     events:
       - http:
           method: get
-          path: flashcardsbycat
+          path: flashcards
           request:
             template:
               application/json: >

@@ -9,7 +9,7 @@ export async function getFlashcardsByCategory(idToken: string, category="", mast
   console.log('Fetching flashcards by category ', category)
   let response: any
   if ( (! category) && (! mastery) ) {
-      response = await Axios.get(`${apiEndpoint}/flashcardsbycat`, {
+      response = await Axios.get(`${apiEndpoint}/flashcards`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${idToken}`
@@ -21,7 +21,7 @@ export async function getFlashcardsByCategory(idToken: string, category="", mast
       const masteryParam = mastery !== "" ? `mastery=${mastery}` : ""
       const paramConnector = (categoryParam && masteryParam) ? "&" : ""
 
-      response = await Axios.get(`${apiEndpoint}/flashcardsbycat?${categoryParam}${paramConnector}${masteryParam}`, {  
+      response = await Axios.get(`${apiEndpoint}/flashcards?${categoryParam}${paramConnector}${masteryParam}`, {  
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${idToken}`

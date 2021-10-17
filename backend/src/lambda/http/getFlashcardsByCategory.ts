@@ -3,17 +3,6 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } f
 import { getAllFlashcards, getAllFlashcardsByCategory } from '../../businessLogic/flashcards'
 import { getToken } from '../utils'
 
-// const return400 = (message: string) => {
-//   return {
-//     statusCode: 400,
-//     headers: {
-//       'Access-Control-Allow-Origin': '*'
-//     },
-//     body: JSON.stringify({
-//         message: message,
-//     })
-//   }  
-// }
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const jwtToken = getToken(event)
@@ -29,7 +18,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       if (( category == null ) && ( mastery !== null) ) {
         // category not specified, but mastery is specified
         message = `get flashcards: category not specified but mastery specified: ${mastery}`
-        flashcards = await getAllFlashcards(jwtToken, mastery)  // add mastery parameter, don't use GSI
+        flashcards = await getAllFlashcards(jwtToken, mastery)  // won't use GSI
       }
       else {
         // getFlashcardsByCategory can handle optional no mastery flag specified
