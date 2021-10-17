@@ -1,42 +1,50 @@
 import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import { getAllFlashcardsByCategory } from '../../businessLogic/flashcards'
+import { getAllFlashcards, getAllFlashcardsByCategory } from '../../businessLogic/flashcards'
 import { getToken } from '../utils'
 
-const return400 = (message: string) => {
-  return {
-    statusCode: 400,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
-    body: JSON.stringify({
-        message: message,
-    })
-  }  
-}
+// const return400 = (message: string) => {
+//   return {
+//     statusCode: 400,
+//     headers: {
+//       'Access-Control-Allow-Origin': '*'
+//     },
+//     body: JSON.stringify({
+//         message: message,
+//     })
+//   }  
+// }
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    if ( event.queryStringParameters == null ) {
-      return return400("get flashcards by category: no parameters specified")
-    }
-    if ( event.queryStringParameters['category'] == null ) {
-      return return400("get flashcards by category: no category specified")
-    }
-
-    const category = event.queryStringParameters['category']
-    const mastery = event.queryStringParameters['mastery']
-    console.log("mastery specified ", mastery)
     const jwtToken = getToken(event)
+    let flashcards: any
+    let message: string
 
-    const flashcards = await getAllFlashcardsByCategory(jwtToken, category, mastery)
-    console.log(jwtToken)
+    if ( event.queryStringParameters == null ) {
+      message = "get flashcards: no querystring parameters were specified"
+      flashcards = await getAllFlashcards(jwtToken)  
+    } else {
+      const category = event.queryStringParameters['category']
+      const mastery = event.queryStringParameters['mastery']      
+      if (( category == null ) && ( mastery !== null) ) {
+        // category not specified, but mastery is specified
+        message = `get flashcards: category not specified but mastery specified: ${mastery}`
+        flashcards = await getAllFlashcards(jwtToken)  // add mastery parameter, don't use GSI
+      }
+      else {
+        // getFlashcardsByCategory can handle optional no mastery flag specified
+        message = `get flashcards: category: ${category}, mastery: ${mastery}`
+        flashcards = await getAllFlashcardsByCategory(jwtToken, category, mastery)       
+      }
+    }
+
     return {
         statusCode: 200,
         headers: {
           'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({
-            message: `get flashcards by category: ${category}, mastery: ${mastery}`,
+            message: message,
             items: flashcards
         })
     }
