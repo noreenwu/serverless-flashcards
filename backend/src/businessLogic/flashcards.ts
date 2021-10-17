@@ -10,11 +10,18 @@ const logger = createLogger('businesslogic')
 const flashcardAccess = new FlashcardAccess();
 
 // get all Flashcards for logged in user
-export async function getAllFlashcards(jwtToken: string): Promise<FlashcardItem[]> {
+export async function getAllFlashcards(jwtToken: string, mastery="All"): Promise<FlashcardItem[]> {
     logger.info('getting all Flashcards for user', {
-        jwtToken
-    });     
+        jwtToken,
+        mastery
+    });
     const userId = parseUserId(jwtToken)
+    let masteryBool: boolean
+    if (mastery !== "All") {
+        masteryBool = (mastery === "true")    
+        return flashcardAccess.getAllFlashcardsFilterByMastery(userId, masteryBool)
+    }
+
     return flashcardAccess.getAllFlashcards(userId)
 }
 

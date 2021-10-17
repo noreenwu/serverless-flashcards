@@ -33,6 +33,68 @@ export class FlashcardAccess {
             return items as FlashcardItem[]
         }
 
+        async getAllFlashcardsFilterByMastery(userId: string, mastery: boolean): Promise<FlashcardItem[]> {
+            logger.info('getting all Flashcards for user, filtered by mastery', {
+                userId,
+                mastery
+            }); 
+            const result = await this.docClient
+                .query({
+                    TableName: this.flashcardsTable,
+                    KeyConditionExpression: 'userId = :userId',
+                    ExpressionAttributeValues: {
+                        ':userId': userId,
+                        ':mastery': mastery
+                },
+                ScanIndexForward: false,
+                FilterExpression: 'mastery = :mastery'
+            }).promise()
+
+            const items = result.Items
+
+            return items as FlashcardItem[]            
+
+        }
+
+
+        // async getAllFlashcards(userId: string, mastery: string): Promise<FlashcardItem[]> {
+        //     logger.info('getting all Flashcards for user', {
+        //         userId,
+        //         mastery
+        //     });
+        //     let masteryBool : boolean
+        //     let result: any
+        //     if (mastery !== "All") {
+        //         masteryBool = (mastery === "true")
+
+        //         // filter the result set
+        //         result = await this.docClient
+        //         .query({
+        //             TableName: this.flashcardsTable,
+        //             KeyConditionExpression: 'userId = :userId',
+        //             ExpressionAttributeValues: {
+        //                 ':userId': userId,
+        //                 ':mastery': masteryBool
+        //             },
+        //             ScanIndexForward: false,
+        //             FilterExpression: 'mastery = :mastery'
+        //         }).promise()                
+        //     } else {
+        //          result = await this.docClient
+        //             .query({
+        //                 TableName: this.flashcardsTable,
+        //                 KeyConditionExpression: 'userId = :userId',
+        //                 ExpressionAttributeValues: {
+        //                     ':userId': userId
+        //             },
+        //             ScanIndexForward: false
+        //         }).promise()
+        //     }            
+        //     const items = result.Items
+
+        //     return items as FlashcardItem[]
+        // }
+
         // By Category
         async getAllFlashcardsByCategory(userId: string, category: string, mastery: string): Promise<FlashcardItem[]> {
             console.log("datalayer category is ", category)
