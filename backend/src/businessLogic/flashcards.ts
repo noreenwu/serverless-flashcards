@@ -21,9 +21,7 @@ export async function getAllFlashcards(jwtToken: string, mastery="All"): Promise
         mastery
     });
     const userId = parseUserId(jwtToken)
-    // let masteryBool: boolean
     if (mastery !== "All") {
-        // masteryBool = (mastery === "true")    
         return flashcardAccess.getAllFlashcardsFilterByMastery(userId, masteryStringToBool(mastery))
     }
 
