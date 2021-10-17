@@ -77,7 +77,8 @@ functions:
             template:
               application/json: >
                 {
-                  "category": "$input.params('category')"
+                  "category": "$input.params('category')",
+                  "mastery": "$input.params('mastery')"
                 }
           cors: true
 

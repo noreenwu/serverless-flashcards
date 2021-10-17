@@ -19,13 +19,14 @@ export async function getAllFlashcards(jwtToken: string): Promise<FlashcardItem[
 }
 
 // get all Flashcards for logged in user
-export async function getAllFlashcardsByCategory(jwtToken: string, category: string): Promise<FlashcardItem[]> {
+export async function getAllFlashcardsByCategory(jwtToken: string, category: string, mastery: string): Promise<FlashcardItem[]> {
     logger.info('getting all Flashcards for user', {
         jwtToken,
-        category
+        category,
+        mastery
     });     
     const userId = parseUserId(jwtToken)
-    return flashcardAccess.getAllFlashcardsByCategory(userId, category)
+    return flashcardAccess.getAllFlashcardsByCategory(userId, category, mastery)
 }
 
 // create a Flashcard for logged in user
