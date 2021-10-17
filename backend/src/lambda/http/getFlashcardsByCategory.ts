@@ -4,8 +4,8 @@ import { getAllFlashcardsByCategory } from '../../businessLogic/flashcards'
 import { getToken } from '../utils'
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const category = event.pathParameters.category
-    console.log("category", category)
+    // const category = event.pathParameters.category
+    const category = event.queryStringParameters['category']
     const jwtToken = getToken(event)
     const flashcards = await getAllFlashcardsByCategory(jwtToken, category)
     console.log(jwtToken)

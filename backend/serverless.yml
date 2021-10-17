@@ -72,7 +72,13 @@ functions:
     events:
       - http:
           method: get
-          path: flashcardsbycat/{category}
+          path: flashcardsbycat
+          request:
+            template:
+              application/json: >
+                {
+                  "category": "$input.params('category')"
+                }
           cors: true
 
   CreateFlashcard:
