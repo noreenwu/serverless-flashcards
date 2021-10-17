@@ -5,6 +5,7 @@ import {
   Button,
   Checkbox,
   Divider,
+  Dropdown,
   Form,
   Grid,
   Header,
@@ -15,7 +16,6 @@ import {
   Segment
 } from 'semantic-ui-react'
 
-// import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
 import { getFlashcards, getFlashcardsByCategory, createFlashcard, deleteFlashcard, patchFlashcard } from '../api/flashcards-api'
 import Auth from '../auth/Auth'
 import { Flashcard } from '../types/Flashcard'
@@ -31,12 +31,19 @@ interface FlashcardsState {
   newFlashcardAnswer: string
   newCategory: string,
   filterByCategory: string,
+  filterByMastery: string,
   loadingFlashcards: boolean
 }
 
-const getRandomInt = (max: number) => {
-  return Math.floor(Math.random() * max);
+interface DropDownOptions {
+  key: string,
+  value: string,
+  text: string
+
 }
+// const getRandomInt = (max: number) => {
+//   return Math.floor(Math.random() * max);
+// }
 
 
 export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsState> {
@@ -46,6 +53,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     newFlashcardAnswer: '',
     newCategory: 'None',
     filterByCategory: '',
+    filterByMastery: 'All',
     loadingFlashcards: true
   }
 
@@ -64,6 +72,11 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
 
   handleFilterByCatChange = (value: string) => {
     this.setState({ filterByCategory: value})
+  }
+
+  handleFilterByMasteryChange = (event: React.SyntheticEvent<HTMLElement>, data: any ) => {
+    console.log("setting filterByMastery to ", data.value)
+    this.setState({ filterByMastery: data.value })
   }
 
   onAddImageClick = (flashcardId: string) => {
@@ -110,7 +123,7 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
     }
 
     try {
-      const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), this.state.filterByCategory)
+      const flashcards = await getFlashcardsByCategory(this.props.auth.getIdToken(), this.state.filterByCategory, this.state.filterByMastery)
       this.setState({
         flashcards,
         loadingFlashcards: false
@@ -178,6 +191,11 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
   }
 
   renderCreateTodoInput() {
+    const masteryOptions = [
+      { key: 'All', value: 'All',  text: "All" },
+      { key: 'Learned', value: 'true', text: "Learned" },
+      { key: 'Study', value: 'false', text: "To Study" }
+    ]
     return (
       <Segment>
       <Grid columns={2} relaxed='very' stackable>
@@ -191,8 +209,18 @@ export class Flashcards extends React.PureComponent<FlashcardProps, FlashcardsSt
         </Grid.Column>
         <Grid.Column verticalAlign='middle'>
           <Form onSubmit={(event) => this.onFlashcardGetByCategory(event)}>
-          <Form.Input label="Filter by:" placeholder="Choose category..." value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
-          <Button content="View" primary type='submit'/>
+          <Form.Input label="Filter by:" placeholder="Enter a category..." value={this.state.filterByCategory} onChange={(event) => this.handleFilterByCatChange(event.target.value)}/>
+          <Dropdown 
+            inline 
+            fluid 
+            selection 
+            labeled 
+            placeholder="Select learned or to study..." 
+            options={masteryOptions}
+            // value={this.state.filterByMastery}
+            onChange={(event, data) => this.handleFilterByMasteryChange(event, data)}
+          />
+          <Button content="View" primary type='submit' style={{marginTop: "20px"}}/>
           </Form>
         </Grid.Column>
       </Grid>
