@@ -106,52 +106,6 @@ export class FlashcardAccess {
             return items as FlashcardItem[]
         }
 
-        // async getAllFlashcardsByCategory(userId: string, category: string, mastery: string): Promise<FlashcardItem[]> {
-        //     console.log("datalayer category is ", category)
-        //     logger.info('getting all Flashcards by category for user', {
-        //         userId,
-        //         category,
-        //         mastery
-        //     });
-
-        //     let result: any;
-        //     if (mastery === "true" || mastery === "false") {
-        //         let boolValue: boolean
-        //         (mastery == "true") ? boolValue = true : boolValue = false;
-        //         result = await this.docClient
-        //             .query({
-        //                 TableName: this.flashcardsTable,
-        //                 IndexName: this.categoryIndex,
-        //                 KeyConditionExpression: 'userId = :userId and category = :category',
-        //                 ExpressionAttributeValues: {
-        //                     ':category': category,
-        //                     ':userId': userId,
-        //                     ':mastery': boolValue                            
-        //                 },
-        //             ScanIndexForward: false,
-        //             FilterExpression: 'mastery = :mastery'
-        //         }).promise()
-        //     }
-        //     else {
-        //         // mastery not specified: don't filter
-        //         result = await this.docClient
-        //             .query({
-        //                 TableName: this.flashcardsTable,
-        //                 IndexName: this.categoryIndex,
-        //                 KeyConditionExpression: 'userId = :userId and category = :category',
-        //                 ExpressionAttributeValues: {
-        //                     ':category': category,
-        //                     ':userId': userId,                            
-        //                 },
-        //             ScanIndexForward: false
-        //         }).promise()                
-        //     }
-
-        //     const items = result.Items
-
-        //     return items as FlashcardItem[]
-        // }
-
         async createFlashcard(newFlashcard: FlashcardItem): Promise<FlashcardItem> {
             logger.info('creating a new Flashcard', {
                 newFlashcard
