@@ -11,6 +11,7 @@ The frontend is a React app which can be downloaded from this repository
 and started up by doing ```npm install``` and ```npm start``` from the [frontend
 directory](https://github.com/noreenwu/serverless-flashcards/tree/main/frontend). The frontend allows you to create new flashcards in specified categories,
 and then to filter them by category, by mastery (learned or not), or both.
+Images can be uploaded and attached to each flashcard.
 
 The lambda endpoints are behind auth, which is set up on auth0. This means
 you can use a 3rd party, such as Google, to authenticate and use the app.
