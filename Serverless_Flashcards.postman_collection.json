@@ -307,6 +307,46 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Presigned URL",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/flashcards/:flashcardId/attachment",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"flashcards",
+						":flashcardId",
+						"attachment"
+					],
+					"variable": [
+						{
+							"key": "flashcardId",
+							"value": "3c8673e2-5099-4ecb-aaa3-64ec9bee3e84"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
