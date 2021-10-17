@@ -41,42 +41,39 @@ export class FlashcardAccess {
                 category,
                 mastery
             });
-            let expressionAttributeVals: Object, filterExpr : string
+
+            let result: any;
             if (mastery === "true" || mastery === "false") {
                 let boolValue: boolean
                 (mastery == "true") ? boolValue = true : boolValue = false;
-                expressionAttributeVals = {
-                    ':category': category,
-                    ':userId': userId,
-                    ':mastery': boolValue
-                }
-                filterExpr = 'mastery = :mastery'
+                result = await this.docClient
+                    .query({
+                        TableName: this.flashcardsTable,
+                        IndexName: this.categoryIndex,
+                        KeyConditionExpression: 'userId = :userId and category = :category',
+                        ExpressionAttributeValues: {
+                            ':category': category,
+                            ':userId': userId,
+                            ':mastery': boolValue                            
+                        },
+                    ScanIndexForward: false,
+                    FilterExpression: 'mastery = :mastery'
+                }).promise()
             }
             else {
-                expressionAttributeVals = {
-                    ':category': category,
-                    ':userId': userId,
-                    ':masterytrue': true,
-                    ':masteryfalse': false
-                }
-                filterExpr = 'mastery = :masterytrue or mastery = :masteryfalse'  
+                // mastery not specified: don't filter
+                result = await this.docClient
+                    .query({
+                        TableName: this.flashcardsTable,
+                        IndexName: this.categoryIndex,
+                        KeyConditionExpression: 'userId = :userId and category = :category',
+                        ExpressionAttributeValues: {
+                            ':category': category,
+                            ':userId': userId,                            
+                        },
+                    ScanIndexForward: false
+                }).promise()                
             }
-            const result = await this.docClient
-                .query({
-                    TableName: this.flashcardsTable,
-                    IndexName: this.categoryIndex,
-                    KeyConditionExpression: 'userId = :userId and category = :category',
-                    ExpressionAttributeValues: expressionAttributeVals,
-                    // ExpressionAttributeValues: {
-                    //     ':category': category,
-                    //     ':userId': userId,
-                    //     ':masterytrue': true,
-                    //     ':masteryfalse': false
-                    // },
-                ScanIndexForward: false,
-                // FilterExpression: 'mastery = :masterytrue or mastery = :masteryfalse'
-                FilterExpression: filterExpr
-            }).promise()
 
             const items = result.Items
 
